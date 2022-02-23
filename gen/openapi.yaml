@@ -1,0 +1,184 @@
+openapi: 3.0.2
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /:
+    get:
+      summary: Read Root
+      operationId: read_root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+  /power/{a}/{b}:
+    get:
+      summary: Read Power
+      description: Latihan pertama, menentukan a pangkat b dengan kedua parameter ialah bilangan bulat
+      operationId: read_power_power__a___b__get
+      parameters:
+        - required: true
+          schema:
+            title: A
+            type: integer
+          name: a
+          in: path
+        - required: true
+          schema:
+            title: B
+            type: integer
+          name: b
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /login:
+    post:
+      summary: Login
+      description: Latihan kedua, fungsi login yang akan mengauthorize jika dan hanya jika username[::-1] = password
+      operationId: login_login_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_login_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /modulo:
+    post:
+      summary: Read Modulo
+      description: Melakukan modulo untuk bilangan pertama dan kedua, format masukan berupa sebuah payload dengan parameter a dan b sebagai kedua bilangan bulat
+      operationId: read_modulo_modulo_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MathQuery'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MathResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    Body_login_login_post:
+      title: Body_login_login_post
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    MathQuery:
+      title: MathQuery
+      required:
+        - a
+        - b
+      type: object
+      properties:
+        a:
+          title: A
+          type: integer
+        b:
+          title: B
+          type: integer
+    MathResponse:
+      title: MathResponse
+      type: object
+      properties:
+        query:
+          $ref: '#/components/schemas/MathQuery'
+        result:
+          title: Result
+          type: integer
+          default: 0
+    MessageResponse:
+      title: MessageResponse
+      type: object
+      properties:
+        msg:
+          title: Msg
+          type: string
+        code:
+          title: Code
+          type: integer
+          default: 0
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+    ValueResponse:
+      title: ValueResponse
+      type: object
+      properties:
+        msg:
+          title: Msg
+          type: integer
+          default: 0
+        code:
+          title: Code
+          type: integer
+          default: 0
