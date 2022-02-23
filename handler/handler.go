@@ -14,7 +14,7 @@ type ApplicationServer struct {
 
 func isSame(a, b string) bool {
 	lenStr := len(a)
-	if a != b {
+	if len(a) != len(b) {
 		return false
 	}
 	for i := 0; i < lenStr; i++ {
@@ -28,7 +28,8 @@ func isSame(a, b string) bool {
 
 func (p *ApplicationServer) LoginLoginPost(ctx echo.Context) error {
 	var loginPost gen.BodyLoginLoginPost
-	_ = ctx.Bind(&loginPost)
+	loginPost.Username = ctx.FormValue("username")
+	loginPost.Password = ctx.FormValue("password")
 	fmt.Println(loginPost)
 	msg := isSame(loginPost.Username, loginPost.Password)
 	strMsg := "not authorized in golang"
